@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <pcap.h>
 #include <netinet/in.h>
 #include <netinet/ip.h>
@@ -11,10 +12,14 @@
 using namespace std;
 
 pcap_t *handle;
+ofstream logFile;
 
 // Function to handle Ctrl+C and close the sniffer gracefully
 void signal_handler(int signum) {
     cout << "\n[!] Stopping sniffer and closing handle..." << endl;
+    if (logFile.is_open()) {
+        logFile.close();
+    }
     pcap_breakloop(handle);
 }
 
@@ -38,6 +43,10 @@ void packet_handler(u_char *user, const struct pcap_pkthdr *pkthdr, const u_char
             cout << "\n[TCP] " << src_ip << ":" << ntohs(tcp_header->th_sport) 
                  << " -> " << dst_ip << ":" << ntohs(tcp_header->th_dport);
 
+            // File Logging
+            logFile << "[TCP] " << src_ip << ":" << ntohs(tcp_header->th_sport) 
+                    << " -> " << dst_ip << ":" << ntohs(tcp_header->th_dport);
+            
             // Calculate payload offset and length
             int total_headers_size = 14 + ip_header_len + tcp_header_len;
             const u_char *payload = packet + total_headers_size;
@@ -55,10 +64,12 @@ void packet_handler(u_char *user, const struct pcap_pkthdr *pkthdr, const u_char
         // Handle ICMP Protocol (Ping)
         else if (ip_header->ip_p == IPPROTO_ICMP) {
             cout << "[ICMP] " << src_ip << " -> " << dst_ip << " (Ping Request/Reply)" << endl;
+            logFile << "[ICMP] " << src_ip << " -> " << dst_ip << " (Ping)" << endl;
         }
         // Handle UDP Protocol
         else if (ip_header->ip_p == IPPROTO_UDP) {
              cout << "[UDP] " << src_ip << " -> " << dst_ip << endl;
+            logFile << "[UDP] " << src_ip << " -> " << dst_ip << endl;
         }
     }
 }
@@ -66,6 +77,13 @@ void packet_handler(u_char *user, const struct pcap_pkthdr *pkthdr, const u_char
 int main() {
     char errbuf[PCAP_ERRBUF_SIZE];
     const char *dev = "enp0s8"; // Your Debian interface
+
+    // Open log file in append mode (ios::app)
+    logFile.open("network_log.txt", ios::app);
+    if (!logFile.is_open()) {
+        cerr << "Error: Could not open log file!" << endl;
+        return 1;
+    }
 
     signal(SIGINT, signal_handler);
 
