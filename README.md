@@ -50,9 +50,9 @@ Upon launching, the program will list all available network interfaces (e.g., et
 3. Monitoring & Logging
 The analyzer will start printing live traffic in color-coded format.
 
-All data is simultaneously appended to network_log.txt for later review.
+  All data is simultaneously appended to network_log.txt for later review.
 
-Press Ctrl+C at any time to stop the capture and save the logs.
+  Press Ctrl+C at any time to stop the capture and save the logs.
 
 
 
