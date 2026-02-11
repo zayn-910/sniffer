@@ -28,3 +28,9 @@ Before running the project, ensure you have the `libpcap` development headers in
 # For Debian/Ubuntu
 sudo apt-get update
 sudo apt-get install libpcap-dev gdb
+```
+
+## compilation 
+```bash
+  g++ sniffer.cpp -o sniffer -lpcap
+
