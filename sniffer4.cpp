@@ -65,7 +65,7 @@ void packet_handler(u_char *user, const struct pcap_pkthdr *pkthdr, const u_char
             logFile << "[TCP] " << src_ip << " -> " << dst_ip << ":" << d_port << endl;
         }
 
-      else if (type == ETHERTYPE_ARP) {
+      else if (ether_type == ETHERTYPE_ARP) {
         struct arphdr *arp_header = (struct arphdr *)(packet + 14);
         cout << BOLD << MAGENTA << "[ARP] " << RESET << "Hardware Type: " << ntohs(arp_header->ar_hrd) 
              << " | Protocol Type: " << ntohs(arp_header->ar_pro) << endl;
