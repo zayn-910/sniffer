@@ -74,13 +74,12 @@ void packet_handler(u_char *user, const struct pcap_pkthdr *pkthdr, const u_char
                 for (int i = 0; i < payload_len; i++) {
                     cout << (isprint(payload[i]) ? (char)payload[i] : '.');
                 }
-
+            }
             else if (ip_header->ip_p == IPPROTO_ICMP) {
             cout << GREEN << "[ICMP] " << RESET << src_ip << " -> " << dst_ip << " (Ping)" << endl;
             }
              else if (ip_header->ip_p == IPPROTO_UDP) {
              cout << YELLOW << "[UDP] " << RESET << src_ip << " -> " << dst_ip << endl;
-            }
             }
             cout << endl;
         }
