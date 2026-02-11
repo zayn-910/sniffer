@@ -17,7 +17,7 @@ A high-performance, CLI-based Network Traffic Analyzer built in C++ using the `l
 
 * **Language:** C++17
 * **Library:** `libpcap` (Packet Capture library)
-* **Environment:** Linux (Debian/Alpine/Kali)
+* **Environment:** Linux (Debian/AntiX/Kali)
 * **Tools:** `g++`, `hping3` (for testing), `arping`
 
 ## 📋 Prerequisites
