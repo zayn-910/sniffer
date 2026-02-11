@@ -52,6 +52,7 @@ void packet_handler(u_char *user, const struct pcap_pkthdr *pkthdr, const u_char
 
         if (ip_header->ip_p == IPPROTO_TCP) {
             struct tcphdr *tcp_header = (struct tcphdr *)(packet + 14 + ip_header_len);
+            int tcp_header_len = tcp_header->th_off * 4;
             int d_port = ntohs(tcp_header->th_dport);
 
             // --- PORT SCAN DETECTION LOGIC ---
