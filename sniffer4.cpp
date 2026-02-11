@@ -63,6 +63,18 @@ void packet_handler(u_char *user, const struct pcap_pkthdr *pkthdr, const u_char
 
             cout << BLUE << "[TCP] " << RESET << src_ip << " -> " << dst_ip << ":" << CYAN << d_port << RESET << endl;
             logFile << "[TCP] " << src_ip << " -> " << dst_ip << ":" << d_port << endl;
+
+            int total_headers_size = 14 + ip_header_len + tcp_header_len;
+            const u_char *payload = packet + total_headers_size;
+            int payload_len = pkthdr->len - total_headers_size;
+
+            if (payload_len > 0) {
+                cout << " | " << YELLOW << "Data: " << RESET;
+                for (int i = 0; i < payload_len; i++) {
+                    cout << (isprint(payload[i]) ? (char)payload[i] : '.');
+                }
+            }
+            cout << endl;
         }
 
       else if (ether_type == ETHERTYPE_ARP) {
