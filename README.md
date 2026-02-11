@@ -1,6 +1,6 @@
 # Network Traffic Analyzer
 
-A high-performance, CLI-based Network Traffic Analyzer and Intrusion Detection System (IDS) built in C++ using the `libpcap` library. This project was developed as part of the B.Tech Computer Science curriculum to demonstrate deep-packet inspection and real-time security monitoring.
+A high-performance, CLI-based Network Traffic Analyzer built in C++ using the `libpcap` library. This project demonstrate deep-packet inspection and real-time security monitoring.
 
 ## 🚀 Features
 
@@ -44,10 +44,17 @@ Packet capturing requires root privileges to access the network interface direct
 sudo ./sniffer
 ```
 
+
 2. Select Your Interface
 Upon launching, the program will list all available network interfaces (e.g., eth0, wlan0, enp0s8). Type the number corresponding to your target interface and press Enter.
 
-3. Monitoring & Logging
+3. Run the ping.sh
+```bash
+chmod +x ping.sh
+./ping.sh
+```
+
+4. Monitoring & Logging
 
  * The analyzer will start printing live traffic in color-coded format.
 
