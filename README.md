@@ -48,7 +48,8 @@ sudo ./sniffer
 Upon launching, the program will list all available network interfaces (e.g., eth0, wlan0, enp0s8). Type the number corresponding to your target interface and press Enter.
 
 3. Monitoring & Logging
-The analyzer will start printing live traffic in color-coded format.
+
+  The analyzer will start printing live traffic in color-coded format.
 
   All data is simultaneously appended to network_log.txt for later review.
 
