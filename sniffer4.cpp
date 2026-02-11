@@ -69,15 +69,14 @@ void packet_handler(u_char *user, const struct pcap_pkthdr *pkthdr, const u_char
         struct arphdr *arp_header = (struct arphdr *)(packet + 14);
         cout << BOLD << MAGENTA << "[ARP] " << RESET << "Hardware Type: " << ntohs(arp_header->ar_hrd) 
              << " | Protocol Type: " << ntohs(arp_header->ar_pro) << endl;
-
-
+      }
+        
         else if (ip_header->ip_p == IPPROTO_ICMP) {
             cout << GREEN << "[ICMP] " << RESET << src_ip << " -> " << dst_ip << " (Ping)" << endl;
         }
         else if (ip_header->ip_p == IPPROTO_UDP) {
              cout << YELLOW << "[UDP] " << RESET << src_ip << " -> " << dst_ip << endl;
         }
-        // ... (Keep your UDP/ICMP/ARP logic here as before)
     }
     logFile.flush(); 
 }
