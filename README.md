@@ -27,7 +27,7 @@ Before running the project, ensure you have the `libpcap` development headers in
 ```bash
 # For Debian/Ubuntu
 sudo apt-get update
-sudo apt-get install libpcap-dev gdb
+sudo apt-get install libpcap-dev g++
 ```
 
 ## Compilation 
