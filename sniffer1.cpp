@@ -72,8 +72,23 @@ void packet_handler(u_char *user, const struct pcap_pkthdr *pkthdr, const u_char
         }
         // UDP LOGIC
         else if (ip_header->ip_p == IPPROTO_UDP) {
-            cout << YELLOW << "[UDP] " << RESET << src_ip << " -> " << dst_ip << endl;
-            logFile << "[UDP] " << src_ip << " -> " << dst_ip << endl;
+        struct udphdr *udp_header = (struct udphdr *)(packet + 14 + ip_header_len);
+        int s_port = ntohs(udp_header->uh_sport);
+        int d_port = ntohs(udp_header->uh_dport);
+
+        cout << YELLOW << "[UDP] " << RESET << src_ip << " -> " << dst_ip;
+
+    // --- DNS Detection ---
+        if (d_port == 53 || s_port == 53) {
+            cout << BOLD << CYAN << " [DNS Query/Response]" << RESET;
+        }
+    // --- DHCP Detection ---
+        else if (d_port == 67 || d_port == 68) {
+            cout << BOLD << GREEN << " [DHCP Assignment]" << RESET;
+        }
+
+        cout << endl;
+        logFile << "[UDP] " << src_ip << ":" << s_port << " -> " << dst_ip << ":" << d_port << endl;
         }
     }
     // --- 2. ARP PROTOCOL ---
