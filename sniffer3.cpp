@@ -78,10 +78,22 @@ void packet_handler(u_char *user, const struct pcap_pkthdr *pkthdr, const u_char
     } 
     // ARP PROTOCOL
     else if (ether_type == ETHERTYPE_ARP) {
-        wattron(scroll_win, COLOR_PAIR(4));
-        wprintw(scroll_win, "[ARP] Frame Detected on Network\n");
-        wattroff(scroll_win, COLOR_PAIR(4));
-        logFile << "[ARP] Packet captured" << endl;
+        const u_char *arp_ptr = packet + 14; 
+        
+        wattron(scroll_win, COLOR_PAIR(4) | A_BOLD);
+        wprintw(scroll_win, "[ARP] ");
+        
+        // Print Sender MAC to Dashboard
+        wprintw(scroll_win, "Src: %02x:%02x:%02x:%02x:%02x:%02x", 
+                arp_ptr[8], arp_ptr[9], arp_ptr[10], arp_ptr[11], arp_ptr[12], arp_ptr[13]);
+        
+        wprintw(scroll_win, " | Tgt: %02x:%02x:%02x:%02x:%02x:%02x\n", 
+                arp_ptr[18], arp_ptr[19], arp_ptr[20], arp_ptr[21], arp_ptr[22], arp_ptr[23]);
+        
+        wattroff(scroll_win, COLOR_PAIR(4) | A_BOLD);
+
+        // Also log to file (standard format)
+        logFile << "[ARP] Sender: " << hex << (int)arp_ptr[8] << ":" << (int)arp_ptr[9] << "..." << dec << endl;
     }
 
     wrefresh(scroll_win);
