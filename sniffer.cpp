@@ -13,7 +13,7 @@
 #include <set>
 #include <net/if_arp.h>
 #include <iomanip>
-#include <ctype>
+#include <ctime>
 
 using namespace std;
 
