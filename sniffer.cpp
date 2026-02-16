@@ -13,6 +13,7 @@
 #include <set>
 #include <net/if_arp.h>
 #include <iomanip>
+#include <ctype>
 
 using namespace std;
 
@@ -31,6 +32,13 @@ ofstream logFile;
 
 map<string, set<int>> scanTracker;
 const int SCAN_THRESHOLD = 10; 
+
+string get_timestamp() {
+    time_t now = time(0);
+    char buf[80];
+    strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", localtime(&now));
+    return string(buf);
+}
 
 void signal_handler(int signum) {
     cout << BOLD << RED << "\n[!] Shutting down IDS..." << RESET << endl;
@@ -59,21 +67,21 @@ void packet_handler(u_char *user, const struct pcap_pkthdr *pkthdr, const u_char
             scanTracker[src_ip].insert(d_port);
             if (scanTracker[src_ip].size() > SCAN_THRESHOLD) {
                 cout << BOLD << RED << "\n[!!!] SECURITY ALERT: Port Scan Detected from " << src_ip << RESET << endl;
-                logFile << "[ALERT] Port Scan Detected from " << src_ip << " hitting " << scanTracker[src_ip].size() << " ports." << endl;
+                logFile << "[" << get_timestamp() << "] [ALERT] Port Scan Detected from " << src_ip << " hitting " << scanTracker[src_ip].size() << " ports." << endl;
             }
 
             cout << BLUE << "[TCP] " << RESET << src_ip << " -> " << dst_ip << ":" << CYAN << d_port << RESET << endl;
-            logFile << "[TCP] " << src_ip << " -> " << dst_ip << ":" << d_port << endl;
+            logFile << "[" << get_timestamp() << "] [TCP] " << src_ip << " -> " << dst_ip << ":" << d_port << endl;
         } 
         // ICMP LOGIC
         else if (ip_header->ip_p == IPPROTO_ICMP) {
             cout << GREEN << "[ICMP] " << RESET << src_ip << " -> " << dst_ip << " (Ping)" << endl;
-            logFile << "[ICMP] " << src_ip << " -> " << dst_ip << " (Ping)" << endl;
+            logFile << "[" << get_timestamp() << "] [ICMP] " << src_ip << " -> " << dst_ip << " (Ping)" << endl;
         }
         // UDP LOGIC
         else if (ip_header->ip_p == IPPROTO_UDP) {
             cout << YELLOW << "[UDP] " << RESET << src_ip << " -> " << dst_ip << endl;
-            logFile << "[UDP] " << src_ip << " -> " << dst_ip << endl;
+            logFile << "[" << get_timestamp() << "] [UDP] " << src_ip << " -> " << dst_ip << endl;
         }
     }
     // --- 2. ARP PROTOCOL ---
@@ -81,7 +89,7 @@ void packet_handler(u_char *user, const struct pcap_pkthdr *pkthdr, const u_char
         const u_char *arp_ptr = packet + 14; 
         
         cout << BOLD << MAGENTA << "[ARP] " << RESET;
-        logFile << "[ARP] ";
+        logFile << "[" << get_timestamp() << "] [ARP] ";
 
         cout << "Sender MAC: ";
         logFile << "Sender MAC: ";
